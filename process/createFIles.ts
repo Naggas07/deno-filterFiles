@@ -27,4 +27,14 @@ const cabeceraNifContrato = async () => {
   return header;
 };
 
-export default { createFile, createToday, cabeceraNifContrato };
+const historialDate = () => {
+  const today = new Date();
+
+  const day = today.getDate() < 10 ? `0${today.getDate()}` : today.getDate();
+  const month =
+    today.getMonth() <= 10 ? `0${today.getMonth() + 1}` : today.getMonth() + 1;
+
+  return `${day}-${month}-${today.getFullYear()}`;
+};
+
+export default { createFile, createToday, cabeceraNifContrato, historialDate };

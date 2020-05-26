@@ -26,20 +26,17 @@ const archiveName = {
   APLZx2YMYR: "APLZx2YMYR",
 };
 
-const APLZYProute = `./output/${archiveName.APLZYP}_${files.createToday()}.csv`;
-const APLZYMYRroute = `./output/${
-  archiveName.APLZYMYR
-}_${files.createToday()}.csv`;
-const APLZx2YMYRroute = `./output/${
-  archiveName.APLZx2YMYR
-}_${files.createToday()}.csv`;
+const routes = {
+  APLZYP: `./output/${archiveName.APLZYP}_${files.createToday()}.csv`,
+  APLZx2YMYR: `./output/${archiveName.APLZx2YMYR}_${files.createToday()}.csv`,
+  APLZYMYR: `./output/${archiveName.APLZYMYR}_${files.createToday()}.csv`,
+  historial: "./historico/historico.txt",
+};
 
 export default {
   isContract,
   isYMYR,
   isYP,
   archiveName,
-  APLZx2YMYRroute,
-  APLZYMYRroute,
-  APLZYProute,
+  routes,
 };
