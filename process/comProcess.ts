@@ -22,7 +22,6 @@ const procesoComodin = (data: any, day: any) => {
 };
 
 const procesoBascula = (data: any, day: any) => {
-  console.log("Datos entrada", data.length);
   const tarjetas = data
     .filter((row: any) => normalize.isYP(row.Contrato1))
     .filter((row: any) => {
@@ -35,7 +34,6 @@ const procesoBascula = (data: any, day: any) => {
       );
     })
     .map((tarjeta: any) => [tarjeta.nif, tarjeta.Contrato1]);
-  console.log("basculas", tarjetas.length);
 
   const historico = tarjetas.map(
     (item: any) => `${item.toString()},BASCULA,${day}`
