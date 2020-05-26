@@ -25,6 +25,8 @@ const archiveName = {
   APLZYMYR: "APLZYMYR",
   APLZx2YMYR: "APLZx2YMYR",
   error: "ERRORES",
+  comodin: "COMODIN",
+  bascula: "BASCULA",
 };
 
 const routes = {
@@ -40,6 +42,12 @@ const routes = {
   historial: "./historico/historico.txt",
   ERRORES: `./output/${files.historialDate()}/${
     archiveName.error
+  }_${files.createToday()}.csv`,
+  comodin: `./output/${files.historialDate()}/${
+    archiveName.comodin
+  }_${files.createToday()}.csv`,
+  bascula: `./output/${files.historialDate()}/${
+    archiveName.bascula
   }_${files.createToday()}.csv`,
 };
 

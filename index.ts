@@ -3,6 +3,7 @@ import files from "./process/createFIles.ts";
 import normalize from "./process/funtions.ts";
 import YP from "./process/YPprocess.ts";
 import YMYR from "./process/YMYRprocess.ts";
+import comodines from "./process/comProcess.ts";
 
 const f = await Deno.open(`./input/ObjetoName.csv`);
 
@@ -11,6 +12,14 @@ let yp = "";
 let erroryp = "";
 let historicDate = files.historialDate();
 
+//create folder sistem if not exist
+Deno.mkdir("./output", { recursive: true });
+Deno.mkdir("./input", { recursive: true });
+Deno.mkdir("./Historico", { recursive: true });
+Deno.mkdir("./Historico/Olders", { recursive: true });
+Deno.mkdir("./tratados", { recursive: true });
+
+//day folder
 Deno.mkdir(`./output/${historicDate}`, { recursive: true });
 
 for await (const obj of readCSVObjects(f)) {
@@ -113,6 +122,39 @@ aplazYMx2.map((item: any, i: number, global: any) => {
     });
   }
 });
+
+//COMODINES
+
+let comodin = comodines.procesoComodin(correctsContrat, historicDate);
+
+let comodinText = "";
+let historialComodin = "";
+comodin.tarjetas.map((row: any) => {
+  let text = `${row[1]}\n`;
+  comodinText += text;
+});
+
+if (comodinText.length > 0) {
+  await files.createFile(normalize.archiveName.comodin, "csv");
+
+  data = encoder.encode(comodinText);
+
+  Deno.writeFile(normalize.routes.comodin, data, {
+    append: true,
+  });
+
+  comodin.historico.map((row: any) => {
+    let text = `${row}\n`;
+    historialComodin += text;
+  });
+
+  data = encoder.encode(historialComodin);
+  Deno.writeFile(normalize.routes.historial, data, {
+    append: true,
+  });
+}
+
+//BASCULA
 
 //errores de tarjetas
 
