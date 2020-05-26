@@ -1,7 +1,6 @@
 import normalize from "./funtions.ts";
 
 const procesoComodin = (data: any, day: any) => {
-  console.log("Datos entrada", data.length);
   const tarjetas = data
     .filter((row: any) => normalize.isYP(row.Contrato1))
     .filter((row: any) => {
@@ -15,8 +14,6 @@ const procesoComodin = (data: any, day: any) => {
     })
     .map((tarjeta: any) => [tarjeta.nif, tarjeta.Contrato1]);
 
-  console.log("comodines", tarjetas.length);
-
   const historico = tarjetas.map(
     (item: any) => `${item.toString()},COMODIN,${day}`
   );
@@ -25,16 +22,20 @@ const procesoComodin = (data: any, day: any) => {
 };
 
 const procesoBascula = (data: any, day: any) => {
+  console.log("Datos entrada", data.length);
   const tarjetas = data
     .filter((row: any) => normalize.isYP(row.Contrato1))
     .filter((row: any) => {
-      row.option1.includes("(BAS)") ||
+      return (
+        row.option1.includes("(BAS)") ||
         row.options2.includes("(BAS)") ||
         row.options3.includes("(BAS)") ||
         row.options4.includes("(BAS)") ||
-        row.options5.includes("(BAS)");
+        row.options5.includes("(BAS)")
+      );
     })
     .map((tarjeta: any) => [tarjeta.nif, tarjeta.Contrato1]);
+  console.log("basculas", tarjetas.length);
 
   const historico = tarjetas.map(
     (item: any) => `${item.toString()},BASCULA,${day}`

@@ -156,6 +156,34 @@ if (comodinText.length > 0) {
 
 //BASCULA
 
+let bascula = comodines.procesoBascula(correctsContrat, historicDate);
+
+let bascText = "";
+let historialbasc = "";
+bascula.tarjetas.map((row: any) => {
+  let text = `${row.toString()}\n`;
+  bascText += text;
+});
+
+if (bascText.length > 0) {
+  await files.createFile(normalize.archiveName.bascula, "csv");
+
+  data = encoder.encode(bascText);
+
+  Deno.writeFile(normalize.routes.bascula, data, {
+    append: true,
+  });
+
+  bascula.historico.map((row: any) => {
+    let text = `${row}\n`;
+    historialbasc += text;
+  });
+
+  data = encoder.encode(historialbasc);
+  Deno.writeFile(normalize.routes.historial, data, {
+    append: true,
+  });
+}
 //errores de tarjetas
 
 const errorContrat1 = lines
