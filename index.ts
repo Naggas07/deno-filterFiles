@@ -1,8 +1,10 @@
 import { readCSVObjects } from "https://deno.land/x/csv/mod.ts";
 import files from "./process/createFIles.ts";
 import normalize from "./process/funtions.ts";
+import YP from "./process/YPprocess.ts";
+import createFiles from "./process/createFIles.ts";
 
-const f = await Deno.open("./input/ObjetoName.csv");
+const f = await Deno.open(`./input/ObjetoName.csv`);
 
 let lines = [];
 let contratos = [];
@@ -16,21 +18,7 @@ const correctsContrat = lines.filter((line) =>
   normalize.isContract(line.Contrato1)
 );
 
-const tarjetas = correctsContrat.filter((line) =>
-  normalize.isYP(line.Contrato1)
-);
-
-const YPaplazables = tarjetas.filter((tarjeta) =>
-  tarjeta.option1.includes("(APLZ)") || tarjeta.options2.includes("(APLZ)") ||
-  tarjeta.options3.includes("(APLZ)") || tarjeta.options4.includes("(APLZ)") ||
-  tarjeta.options5.includes("(APLZ)")
-).map((tarjeta) => {
-  return [tarjeta.nif, tarjeta.Contrato1];
-});
-
-const YPaplazableSinDuplicados = YPaplazables.filter((line, i, global) =>
-  global.indexOf(line) === i
-);
+const tarjetas = await YP.procesoTarjeta(lines);
 
 // lines.map((row) => console.log(row));
 // contratos.map((row) => console.log(row));
@@ -38,20 +26,23 @@ const YPaplazableSinDuplicados = YPaplazables.filter((line, i, global) =>
 
 console.log(lines.length);
 console.log(correctsContrat.length);
-console.log(YPaplazables.length);
-console.log(YPaplazableSinDuplicados.length);
+console.log(tarjetas.tarjetas);
 
 await files.createFile("Prueba", "csv");
 
-YPaplazableSinDuplicados.map(async (line) => {
+tarjetas.YPaplazableSinDuplicados.map(async (line: any) => {
   const textLine = line.join(",");
   const encoder = new TextEncoder();
   const data = encoder.encode(`${textLine}\n`);
-  await Deno.writeFile(
-    `./output/Prueba_${files.createToday()}.txt`,
-    data,
-    { append: true },
-  );
+  await Deno.writeFile(`./output/Prueba_${files.createToday()}.csv`, data, {
+    append: true,
+  });
 });
 
 f.close();
+
+await Deno.copyFile(
+  `./input/ObjetoName.csv`,
+  `./tratados/tratado_${createFiles.createToday()}.csv`
+);
+await Deno.remove(`./input/ObjetoName.csv`);
