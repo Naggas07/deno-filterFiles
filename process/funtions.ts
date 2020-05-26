@@ -24,13 +24,23 @@ const archiveName = {
   APLZYP: "APLZYP",
   APLZYMYR: "APLZYMYR",
   APLZx2YMYR: "APLZx2YMYR",
+  error: "ERRORES",
 };
 
 const routes = {
-  APLZYP: `./output/${archiveName.APLZYP}_${files.createToday()}.csv`,
-  APLZx2YMYR: `./output/${archiveName.APLZx2YMYR}_${files.createToday()}.csv`,
-  APLZYMYR: `./output/${archiveName.APLZYMYR}_${files.createToday()}.csv`,
+  APLZYP: `./output/${files.historialDate()}/${
+    archiveName.APLZYP
+  }_${files.createToday()}.csv`,
+  APLZx2YMYR: `./output/${files.historialDate()}/${
+    archiveName.APLZx2YMYR
+  }_${files.createToday()}.csv`,
+  APLZYMYR: `./output/${files.historialDate()}/${
+    archiveName.APLZYMYR
+  }_${files.createToday()}.csv`,
   historial: "./historico/historico.txt",
+  ERRORES: `./output/${files.historialDate()}/${
+    archiveName.error
+  }_${files.createToday()}.csv`,
 };
 
 export default {

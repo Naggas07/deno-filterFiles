@@ -3,6 +3,7 @@ import normalize from "./funtions.ts";
 const procesoYMYR = async (datos: any) => {
   let aplazaYMYR = [String];
   let aplazax2YMYR = [String];
+  let errores = [String];
 
   const camposYMYRrevision = [
     ["Contrato2", "optionContrato2"],
@@ -19,11 +20,12 @@ const procesoYMYR = async (datos: any) => {
       contrato[0],
       contrato[1],
       aplazaYMYR,
-      aplazax2YMYR
+      aplazax2YMYR,
+      errores
     );
   });
 
-  return { aplazaYMYR, aplazax2YMYR };
+  return { aplazaYMYR, aplazax2YMYR, errores };
 };
 
 const procesoContratoPrincipal = async (
@@ -66,8 +68,19 @@ const procesoOtrosContratos = (
   contrato: string,
   campoRevision: string,
   aplz: any[],
-  aplzx2: any[]
+  aplzx2: any[],
+  error: any[]
 ) => {
+  dato
+    .filter((line: any) => !normalize.isContract(line[`${contrato}`]))
+    .map((ko: any) => {
+      ko[`${contrato}`].length > 0
+        ? error.push([ko[`${contrato}`], ko.nif, ko.email, ko.hora])
+        : "";
+
+      return;
+    });
+
   const validos = dato
     .filter((line: any) => normalize.isYMYR(line[`${contrato}`]))
     .filter((line: any) => normalize.isContract(line[`${contrato}`]));

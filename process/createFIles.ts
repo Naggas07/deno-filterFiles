@@ -1,14 +1,19 @@
-import { writeCSVObjects } from "https://deno.land/x/csv/mod.ts";
+import files from "./createFIles.ts";
 
 const createFile = async (name: string, extension: string) => {
   const file = await Deno.create(
-    `./output/${name}_${createToday()}.${extension}`
+    `./output/${files.historialDate()}/${name}_${createToday()}.${extension}`
   );
 
   return file;
 };
 
-const updateHistorial = async () => {};
+const cabeceraErrores = () => {
+  const encoder = new TextEncoder();
+  const header = encoder.encode(`Contrato,NIF,email,dia\n`);
+
+  return header;
+};
 
 const createToday = () => {
   const today = new Date();
@@ -37,4 +42,10 @@ const historialDate = () => {
   return `${day}-${month}-${today.getFullYear()}`;
 };
 
-export default { createFile, createToday, cabeceraNifContrato, historialDate };
+export default {
+  createFile,
+  createToday,
+  cabeceraNifContrato,
+  historialDate,
+  cabeceraErrores,
+};

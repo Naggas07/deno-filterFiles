@@ -7,8 +7,11 @@ import YMYR from "./process/YMYRprocess.ts";
 const f = await Deno.open(`./input/ObjetoName.csv`);
 
 let lines = [];
+let yp = "";
+let erroryp = "";
 let historicDate = files.historialDate();
-let errores = [];
+
+Deno.mkdir(`./output/${historicDate}`, { recursive: true });
 
 for await (const obj of readCSVObjects(f)) {
   lines.push(obj);
@@ -21,7 +24,6 @@ const correctsContrat = lines.filter((line) =>
 const tarjetas = await YP.procesoTarjeta(lines);
 
 //aplazaYP
-
 await files.createFile(normalize.archiveName.APLZYP, "csv");
 
 let header = await files.cabeceraNifContrato();
@@ -29,20 +31,24 @@ await Deno.writeFile(normalize.routes.APLZYP, header, {
   append: true,
 });
 
-tarjetas.YPaplazableSinDuplicados.map(async (line: any) => {
-  const textLine = line.join(",");
-  const encoder = new TextEncoder();
-  const data = encoder.encode(`${textLine}\n`);
+tarjetas.YPaplazableSinDuplicados.map((line: any) => {
+  let textLine = line.join(",");
+  yp += `${textLine}\n`;
 
-  await Deno.writeFile(normalize.routes.APLZYP, data, {
-    append: true,
-  });
+  let texterror = `${textLine},APLZYP,${historicDate}`;
+  erroryp += `${texterror}\n`;
+});
 
-  const textHistoric = `${textLine},APLZYP,${historicDate}`;
-  const historicData = encoder.encode(`${textHistoric}\n`);
-  Deno.writeFile(normalize.routes.historial, historicData, {
-    append: true,
-  });
+const encoder = new TextEncoder();
+let data = encoder.encode(yp);
+
+await Deno.writeFile(normalize.routes.APLZYP, data, {
+  append: true,
+});
+
+data = encoder.encode(erroryp);
+await Deno.writeFile(normalize.routes.historial, data, {
+  append: true,
 });
 
 //aplazaYMYR
@@ -56,23 +62,27 @@ await Deno.writeFile(normalize.routes.APLZYMYR, header, {
 });
 
 const aplazYM = YmYr.aplazaYMYR.slice(1);
+let aplzaYMYR = "";
+let historicoYM = "";
 
-aplazYM.map((item: any, i: number, global: any) => {
-  if (global.indexOf(item) === i) {
-    const textLine = item.join(",");
-    const encoder = new TextEncoder();
-    const data = encoder.encode(`${textLine}\n`);
+aplazYM.map((line: any) => {
+  let textLine = line.join(",");
+  aplzaYMYR += `${textLine}\n`;
 
-    Deno.writeFile(normalize.routes.APLZYMYR, data, {
-      append: true,
-    });
+  let texterror = `${textLine},APLZYMYR,${historicDate}`;
+  historicoYM += `${texterror}\n`;
+});
 
-    const textHistoric = `${textLine},APLZYM,${historicDate}`;
-    const historicData = encoder.encode(`${textHistoric}\n`);
-    Deno.writeFile(normalize.routes.historial, historicData, {
-      append: true,
-    });
-  }
+data = encoder.encode(aplzaYMYR);
+
+await Deno.writeFile(normalize.routes.APLZYMYR, data, {
+  append: true,
+});
+
+data = encoder.encode(historicoYM);
+
+await Deno.writeFile(normalize.routes.historial, data, {
+  append: true,
 });
 
 //APLZ x2
@@ -102,6 +112,43 @@ aplazYMx2.map((item: any, i: number, global: any) => {
       append: true,
     });
   }
+});
+
+//errores de tarjetas
+
+const errorContrat1 = lines
+  .filter((line) => !normalize.isContract(line.Contrato1))
+  .map((err) => [err.Contrato1, err.nif, err.email, err.hora]);
+
+await files.createFile(normalize.archiveName.error, "csv");
+
+header = await files.cabeceraErrores();
+await Deno.writeFile(normalize.routes.ERRORES, header, {
+  append: true,
+});
+
+let errors = "";
+
+errorContrat1.map((error) => {
+  const textLine = error.join(",");
+  const errorLine = `${textLine}\n`;
+
+  errors += errorLine;
+});
+
+const errorYM = YmYr.errores.slice(1);
+
+errorYM.map((error) => {
+  const textLine = error.toString();
+  const errorLine = `${textLine}\n`;
+
+  errors += errorLine;
+});
+
+data = encoder.encode(errors);
+
+await Deno.writeFile(normalize.routes.ERRORES, data, {
+  append: true,
 });
 
 f.close();
