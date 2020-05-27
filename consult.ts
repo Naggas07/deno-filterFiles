@@ -59,3 +59,5 @@ if (contrato != "") {
   let mismoNif = text.filter((item: any) => item.nif == nif);
   console.log(mismoNif);
 }
+
+console.log("fin del programa");
