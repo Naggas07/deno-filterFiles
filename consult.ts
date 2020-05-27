@@ -22,7 +22,6 @@ if (queEs === "S" || queEs === "SI" || queEs === "s" || queEs === "si") {
   } else {
     contrato = new TextDecoder().decode(buf.subarray(0, n)).trim();
   }
-  console.log("contrato:", contrato);
 } else {
   buf = new Uint8Array(1024);
   console.info("Introduce el número de nif:");
@@ -32,5 +31,31 @@ if (queEs === "S" || queEs === "SI" || queEs === "s" || queEs === "si") {
   } else {
     nif = new TextDecoder().decode(buf.subarray(0, n)).trim();
   }
-  console.log("nif:", nif);
+}
+
+// leemos historico
+
+const decoder = new TextDecoder("utf-8");
+const data = await Deno.readFile("./Historico/historico.txt");
+let text = decoder
+  .decode(data)
+  .split("\n")
+  .map((item: any) => item.split(","))
+  .map((item: any) => {
+    return {
+      nif: item[0],
+      contrato: item[1],
+      solicitud: item[2],
+      fechaTamitacion: item[3],
+    };
+  });
+
+// consultamos
+
+if (contrato != "") {
+  let mismoContrato = text.filter((item: any) => item.contrato == contrato);
+  console.log(mismoContrato);
+} else {
+  let mismoNif = text.filter((item: any) => item.nif == nif);
+  console.log(mismoNif);
 }
