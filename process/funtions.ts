@@ -27,6 +27,7 @@ const archiveName = {
   error: "ERRORES",
   comodin: "COMODIN",
   bascula: "BASCULA",
+  acumBascula: "BASCULASEMANAL",
 };
 
 const routes = {
@@ -49,6 +50,9 @@ const routes = {
   bascula: `./output/${files.historialDate()}/${
     archiveName.bascula
   }_${files.createToday()}.csv`,
+  basculaSemanal: `./output/${files.historialDate()}/${
+    archiveName.acumBascula
+  }_${files.createToday()}.txt`,
 };
 
 export default {

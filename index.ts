@@ -158,6 +158,11 @@ if (comodinText.length > 0) {
 
 let bascula = comodines.procesoBascula(correctsContrat, historicDate);
 
+header = await files.cabeceraNifContrato();
+await Deno.writeFile(normalize.routes.bascula, header, {
+  append: true,
+});
+
 let bascText = "";
 let historialbasc = "";
 bascula.tarjetas.map((row: any) => {
