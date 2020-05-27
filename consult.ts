@@ -60,4 +60,4 @@ if (contrato != "") {
   console.log(mismoNif);
 }
 
-console.log("fin del programa");
+console.log("fin del programa!");
